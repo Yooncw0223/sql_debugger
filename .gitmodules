@@ -1,0 +1,3 @@
+[submodule "Cosette"]
+	path = Cosette
+	url = https://github.com/uwdb/Cosette.git

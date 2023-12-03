@@ -3,25 +3,9 @@
 import csv
 import json
 import jsonlines
-import sqlite3
-import numpy as np
 from sklearn.model_selection import train_test_split
 
-def check_equivalence(predicted, gold, database):
-    con = sqlite3.connect(f"spider/database/{database}/{database}.sqlite")
-    con.text_factory = bytes
-    cur = con.cursor()
-    try:
-        cur.execute(predicted)
-        predicted_res = cur.fetchall()
-    except sqlite3.OperationalError:
-        predicted_res = None
-    cur.execute(gold)
-    gold_res = cur.fetchall()
-    con.close()
-
-    is_equivalent = predicted_res == gold_res
-    return is_equivalent
+from evaluate import check_equivalence
 
 def build_train_dataset(train_data):
     output_dataset = []
@@ -66,10 +50,12 @@ Create a valid JSON that represents the corrected query:\
 {\
 \"sql_query\": \"The correct SQL query\",\
 \"explanation\": \"How you corrected the query\",\
-\"correct\": \"Whether the given SQL query is correct\",\
+\"correct\": \"true/false: Is the given SQL query correct\",\
 }\
 "}
 ],
+                              'gold': line[2],
+                              'database': line[3],
 })
     return output_dataset
 

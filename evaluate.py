@@ -1,19 +1,27 @@
 import sqlite3
 
-def check_equivalence(predicted, gold, database):
+def evaluate_query(query, database):
     con = sqlite3.connect(f"spider/database/{database}/{database}.sqlite")
-    con.text_factory = bytes
+    con.text_factory = lambda b: b.decode(errors = 'ignore')
     cur = con.cursor()
     try:
-        cur.execute(predicted)
-        predicted_res = cur.fetchall()
-    except sqlite3.OperationalError:
-        predicted_res = None
-    cur.execute(gold)
-    gold_res = cur.fetchall()
+        cur.execute(query)
+        res = cur.fetchall()
+    except sqlite3.OperationalError as error:
+        res = error
     con.close()
+    return res
 
+
+def check_equivalence(predicted, gold, database, return_sql_outputs=False):
+    predicted_res = evaluate_query(predicted, database)
+    gold_res = evaluate_query(gold, database)
+    if isinstance(gold_res, sqlite3.OperationalError):
+        raise(gold_res)
     is_equivalent = predicted_res == gold_res
-    return is_equivalent
+    if return_sql_outputs:
+        return is_equivalent, predicted_res, gold_res
+    else:
+        return is_equivalent
 
 

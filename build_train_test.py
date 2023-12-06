@@ -138,92 +138,38 @@ class Approach3:
 
     @staticmethod
     def get_system_content():
-        return "You are helping the user debug their SQL query by returning a JSON, given an English prompt, a sample SQL query, and that query's output. The given query may already be correct."
+        return "You are helping the user debug their SQL query by returning a JSON, \
+given an English prompt, and a sample SQL query. \
+The given query may already be correct. \
+You may ask the user to run a SQL query for you to learn more about the database. \
+"
 
     @staticmethod
-    def get_user_content(prompt, predicted, predicted_res):
-        return "How do I express \'" + str(prompt) + "\' in SQLite? I currently have \'" + str(predicted) + "\', which outputs " +  str(predicted_res) + ". If this is correct, please return this query in the format specified below. \
-Create a valid JSON that represents the corrected query:\
+    def get_user_content_initial(prompt, predicted):
+        return "How do I express \'" + str(prompt) + "\' in SQLite? \
+I currently have \'" + str(predicted) + "\'. \
+If you'd like, I can also run any SQL query against the database for you. \
+Create a valid JSON: \
 {\
-\"sql_query\": \"The correct SQL query\",\
-\"correct\": \"Whether the given SQL query is correct\",\
+\"sql_query\": \"The correct SQL query\", \
+\"sql_query_to_run\": \"A SQL query for the user to run. Leave as empty string if no extra information about database is needed.\"\
 }\
 "
 
     @staticmethod
-    def get_assistant_content(gold, is_equivalent):
-        if is_equivalent:
-            correct_output = json.dumps({"sql_query": gold, "correct": "true"})
-        else:
-            correct_output = json.dumps({"sql_query": gold, "correct": "false"})
-        return correct_output
+    def get_user_content_runSQL(sql_query_to_run, database):
+        return evaluate_query(sql_query_to_run, database)
 
     @classmethod
-    def build_train_dataset(cls, train_data):
-        output_dataset = []
-        for line in train_data:
-            prompt, predicted, gold, database, = line
-
-            # if predicted is correct, then prompt, predicted -> gold, true
-            # if predicted is wrong, then   prompt, predicted -> gold, false
-            #                               gold, predicted   -> gold, true
-
-            is_equivalent, predicted_res, gold_res = check_equivalence(predicted, gold, database, return_sql_outputs=True)
-            if is_equivalent:
-                output_dataset.append({'messages':[
-                    {
-                        "role": "system", 
-                        "content": cls.get_system_content()},
-                    {
-                        'role': 'user', 
-                        'content': cls.get_user_content(prompt, predicted, predicted_res)},
-                    {
-                        'role': 'assistant',
-                        'content': cls.get_assistant_content(gold, True)
-                    }]})
-            else:
-                output_dataset.append({'messages':[
-                    {
-                        "role": "system", 
-                        "content": cls.get_system_content()},
-                    {
-                        'role': 'user', 
-                        'content': cls.get_user_content(prompt, predicted, predicted_res)},
-                    {
-                        'role': 'assistant',
-                        'content': cls.get_assistant_content(gold, False)
-                    }]})
-                output_dataset.append({'messages':[
-                    {
-                        "role": "system", 
-                        "content": cls.get_system_content()},
-                    {
-                        'role': 'user', 
-                        'content': cls.get_user_content(prompt, gold, gold_res)},
-                    {
-                        'role': 'assistant',
-                        'content': cls.get_assistant_content(gold, True)
-                    }]})
-        return output_dataset
-
-    @classmethod
-    def build_test_dataset(cls, test_data):
-        output_dataset = []
-        for line in test_data:
-            prompt, predicted, gold, database, = line
-            predicted_res = evaluate_query(predicted, database)
-            output_dataset.append({'messages':[
-                {
-                    "role": "system", 
-                    "content": cls.get_system_content()},
-                {
-                    'role': 'user', 
-                    'content': cls.get_user_content(prompt, predicted, predicted_res)}
-                ],
-                'gold': gold,
-                'database': database,
-            })
-        return output_dataset
+    def conversation(cls, prompt, predicted, database):
+        def get_gpt_response(message) -> dict:
+            # dummy function. eventually, link this up to gpt, and delete this.
+            return None
+        get_gpt_response(cls.get_system_content())
+        response = get_gpt_response(cls.get_user_content_initial(prompt, predicted))
+        while response["sql_query_to_run"]:
+            response = get_gpt_response(cls.get_user_content_runSQL(response["sql_query_to_run"], database))
+        return response["sql_query"]
 
 if __name__ == "__main__":
     with open('DIN-SQL.csv') as f:

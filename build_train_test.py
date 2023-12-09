@@ -169,7 +169,7 @@ Create a valid JSON: \
 
     @classmethod
     def conversation(cls, prompt, predicted, database):
-        def get_gpt_response(message) -> dict:
+        def get_gpt_response(messages) -> dict:
             # dummy function. eventually, link this up to gpt, and delete this.
             client = OpenAI(api_key=os.environ.get("openaiAPI"))
 
@@ -179,11 +179,16 @@ Create a valid JSON: \
                 messages = [{"role": "system", "content": cls.get_system_content()}, {"role": "user", "content": prompt}],
             )
             result = response.choices[0].message.content
-            return json.loads(result if result else "{}");
-        get_gpt_response(cls.get_system_content())
-        response = get_gpt_response(cls.get_user_content_initial(prompt, predicted))
+            return json.loads(result if result else "{}")
+        response = get_gpt_response([
+            {"role": "system", "content": cls.get_system_content()},
+            {"role": "user", "content": cls.get_user_content_initial(prompt, predicted)},
+        ])
         while response["sql_query_to_run"]:
-            response = get_gpt_response(cls.get_user_content_runSQL(response["sql_query_to_run"], database))
+            response = get_gpt_response([
+                {"role": "system", "content": cls.get_system_content()},
+                {"role": "user", "content": cls.get_user_content_runSQL(response["sql_query_to_run"], database)},
+            ])
         return response["sql_query"]
 
 if __name__ == "__main__":

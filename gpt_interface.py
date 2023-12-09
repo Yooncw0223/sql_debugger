@@ -29,15 +29,27 @@ The given query may already be correct. \
 You may ask the user to run a SQL query for you to learn more about the database. \
 "
 
-def get_gpt_response(message, model_name):
+def get_gpt_response(messages, model_name="gpt-3.5-turbo-1106"):
     # dummy function. eventually, link this up to gpt, and delete this.
     response = client.chat.completions.create(
         model=model_name,
         response_format={ "type": "json_object" },
-        messages = [{"role": "system", "content": get_system_content()}, {"role": "user", "content": message}],
+        messages = messages,
     )
     result = response.choices[0].message.content
     return json.loads(result if result else "{}");
 
 
+# filename must be from openai portal
+def fine_tune_model(train_dataset_filename: str, model_to_finetune = "gpt-3.5-turbo-1106"):
+    client.fine_tuning.jobs.create(
+        training_file=train_dataset_filename,
+        model=model_to_finetune
+    )
 
+# physical file's name
+def create_dataset_file(dataset_filename):
+    client.files.create(
+        file=open(dataset_filename, "rb"),
+        purpose="fine-tune"
+    )

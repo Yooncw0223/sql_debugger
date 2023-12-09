@@ -134,6 +134,7 @@ Create a valid JSON that represents the corrected query:\
             })
         return output_dataset
 
+from gpt_interface import *
 class Approach3:
     # Input is prompt and SQL query and SQL output
     # Output is corrected SQL query
@@ -169,22 +170,23 @@ Create a valid JSON: \
 
     @classmethod
     def conversation(cls, prompt, predicted, database):
-        def get_gpt_response(messages) -> dict:
-            # dummy function. eventually, link this up to gpt, and delete this.
-            client = OpenAI(api_key=os.environ.get("openaiAPI"))
-
-            response = client.chat.completions.create(
-                model="gpt-3.5-turbo-1106",
-                response_format={ "type": "json_object" },
-                messages = [{"role": "system", "content": cls.get_system_content()}, {"role": "user", "content": prompt}],
-            )
-            result = response.choices[0].message.content
-            return json.loads(result if result else "{}")
+        # def get_gpt_response(messages) -> dict:
+        #     # dummy function. eventually, link this up to gpt, and delete this.
+        #     client = OpenAI(api_key=os.environ.get("openaiAPI"))
+        #
+        #     response = client.chat.completions.create(
+        #         model="gpt-3.5-turbo-1106",
+        #         response_format={ "type": "json_object" },
+        #         messages = [{"role": "system", "content": cls.get_system_content()}, {"role": "user", "content": prompt}],
+        #     )
+        #     result = response.choices[0].message.content
+        #     return json.loads(result if result else "{}")
         response = get_gpt_response([
             {"role": "system", "content": cls.get_system_content()},
             {"role": "user", "content": cls.get_user_content_initial(prompt, predicted)},
         ])
         while response["sql_query_to_run"]:
+            print("conversation running")
             response = get_gpt_response([
                 {"role": "system", "content": cls.get_system_content()},
                 {"role": "user", "content": cls.get_user_content_runSQL(response["sql_query_to_run"], database)},
@@ -209,5 +211,3 @@ if __name__ == "__main__":
         with jsonlines.open(f'{approach.__name__}_test_dataset.jsonl', mode='w') as writer:
             writer.write_all(test_dataset)
 
-SELECT COUNT(*) FROM singer,SELECT count(*) FROM singer,concert_singer
-Approach3.conversation("How many singers do we have?", )

@@ -5,6 +5,8 @@ import json
 import jsonlines
 from sklearn.model_selection import train_test_split
 
+import os
+from openai import OpenAI
 from evaluate import check_equivalence, evaluate_query
 
 class Approach1:
@@ -164,7 +166,15 @@ Create a valid JSON: \
     def conversation(cls, prompt, predicted, database):
         def get_gpt_response(message) -> dict:
             # dummy function. eventually, link this up to gpt, and delete this.
-            return None
+            client = OpenAI(api_key=os.environ.get("openaiAPI"))
+
+            response = client.chat.completions.create(
+                model="gpt-3.5-turbo-1106",
+                response_format={ "type": "json_object" },
+                messages = [{"role": "system", "content": cls.get_system_content()}, {"role": "user", "content": prompt}],
+            )
+            result = response.choices[0].message.content
+            return json.loads(result if result else "{}");
         get_gpt_response(cls.get_system_content())
         response = get_gpt_response(cls.get_user_content_initial(prompt, predicted))
         while response["sql_query_to_run"]:

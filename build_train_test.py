@@ -162,6 +162,11 @@ Create a valid JSON: \
     def get_user_content_runSQL(sql_query_to_run, database):
         return evaluate_query(sql_query_to_run, database)
 
+    @staticmethod
+    def wrap_around_db_result(cls, query_result):
+        # should be in {"role": "...", "content": "Here is what we got: {query_result}. Now answer {original question} or ask us to run the query again"} format
+        pass
+
     @classmethod
     def conversation(cls, prompt, predicted, database):
         def get_gpt_response(message) -> dict:
@@ -198,3 +203,6 @@ if __name__ == "__main__":
         test_dataset = approach.build_test_dataset(test_data)
         with jsonlines.open(f'{approach.__name__}_test_dataset.jsonl', mode='w') as writer:
             writer.write_all(test_dataset)
+
+SELECT COUNT(*) FROM singer,SELECT count(*) FROM singer,concert_singer
+Approach3.conversation("How many singers do we have?", )

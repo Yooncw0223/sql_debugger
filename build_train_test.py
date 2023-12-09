@@ -161,7 +161,8 @@ Create a valid JSON: \
 
     @staticmethod
     def get_user_content_runSQL(sql_query_to_run, database):
-        return evaluate_query(sql_query_to_run, database)
+        res = evaluate_query(sql_query_to_run, database)
+        return str(res)
 
     @staticmethod
     def wrap_around_db_result(cls, query_result):

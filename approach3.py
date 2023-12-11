@@ -17,7 +17,7 @@ You may ask the user to run a SQL query for you to learn more about the database
         return "How do I express \'" + prompt + "\' in SQLite? \
 I currently have \'" + predicted + "\'. \
 If you'd like, I can also run any SQL query against the database for you. \
-Create a valid JSON: \
+Only give me exactly the information that is asked for. Create a valid JSON: \
 {\
 \"sql_query\": \"The correct SQL query\", \
 \"sql_query_to_run\": \"A SQL query for the user to run. Leave as empty string if no extra information about database is needed.\"\

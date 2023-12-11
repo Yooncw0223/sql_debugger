@@ -11,7 +11,7 @@ class Approach1:
     @staticmethod
     def get_user_content(prompt):
         return "How do I express \'" + str(prompt) + "\' in SQLite? \
-Create a valid JSON that represents the corrected query:\
+Only give me exactly the information that is asked for. Create a valid JSON that represents the corrected query:\
 {\
 \"sql_query\": \"The SQL query\",\
 }\

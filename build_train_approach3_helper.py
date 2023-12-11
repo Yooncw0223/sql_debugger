@@ -27,8 +27,13 @@ if __name__ == "__main__":
 
     add_assistant_response = None
 
+    change_assistant_response_to = None
+
     cur_messages = cur_train[idx]["messages"]
     if cur_messages[-1]["role"] != "assistant":
+        if change_assistant_response_to is not None:
+            print("change_assistant_response_to is not None, and last message is not assistant")
+            raise Exception
         if add_assistant_response is None:
             print("please add assistant response")
             print()
@@ -39,7 +44,7 @@ if __name__ == "__main__":
                 print()
         else:
             cur_messages.append({"role": "assistant", "content": json.dumps(add_assistant_response)})
-            print("added assistant response. if everything looks correct, set add_assistant_respone=None")
+            print("added assistant response. if everything looks correct, set add_assistant_response=None")
     else:
         if add_assistant_response is not None:
             print("the assistant response already seems to be added. please explicitly set add_assistant_response=None")
@@ -49,14 +54,27 @@ if __name__ == "__main__":
         if is_equivalent:
             print("equivalent")
         else:
-            print("not equivalent")
-            print(predicted)
-            print(final_query)
-            print(gold)
-            print(prompt)
-            print()
-            print(final_query_res)
-            print(gold_res)
+            if change_assistant_response_to is None:
+                print("not equivalent")
+                print(predicted)
+                print(final_query)
+                print(gold)
+                print(prompt)
+                print()
+                print(final_query_res)
+                print(gold_res)
+            else:
+                print("changing assistant response")
+                assistant_response = json.loads(cur_messages[-1]["content"])
+                if assistant_response["sql_query_to_run"]:
+                    print("assistant already has sql_query_to_run")
+                    raise(Exception)
+                assistant_response["sql_query_to_run"] = change_assistant_response_to
+                cur_messages[-1]["content"] = json.dumps(assistant_response)
+                cur_messages.append({
+                    "role": "user", 
+                    "content": f"The result of running query '{change_assistant_response_to}' is '{evaluate_query(change_assistant_response_to, database)}'. How do I express '{prompt}' in SQLite? " + "Only give me exactly the information that is asked for. Create a valid JSON: {\"sql_query\": \"The correct SQL query\", \"sql_query_to_run\": \"A SQL query for the user to run. Leave as empty string if no extra information about database is needed.\"}"
+                    })
 
     with jsonlines.open(train_dataset_filename, mode="w") as writer:
         writer.write_all(cur_train)

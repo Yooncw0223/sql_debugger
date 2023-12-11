@@ -13,7 +13,7 @@ class Approach2:
     @staticmethod
     def get_user_content(prompt, predicted):
         return "How do I express \'" + str(prompt) + "\' in SQLite? I currently have \'" + str(predicted) + "\', and if this is correct, please return this query in the format specified below. \
-Create a valid JSON that represents the corrected query:\
+Only give me exactly the information that is asked for. Create a valid JSON that represents the corrected query:\
 {\
 \"sql_query\": \"The correct SQL query\",\
 \"correct\": \"Whether the given SQL query is correct\",\

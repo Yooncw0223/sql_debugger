@@ -59,3 +59,21 @@ Create a valid JSON: \
                 {"role": "user", "content": cls.get_user_content_runSQL(response["sql_query_to_run"], database)},
             ])
         return response["sql_query"]
+
+    @classmethod
+    def build_train_dataset(cls, train_data):
+        # Not yet implemented
+        return []
+
+    @classmethod
+    def build_test_dataset(cls, test_data):
+        output_dataset = []
+        for line in test_data:
+            prompt, predicted, gold, database, = line
+            output_dataset.append({
+                'prompt': prompt,
+                'predicted': predicted,
+                'gold': gold,
+                'database': database,
+            })
+        return output_dataset

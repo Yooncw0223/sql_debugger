@@ -4,11 +4,11 @@ import argparse
 from gpt_interface import get_gpt_response
 from evaluate import check_equivalence
 
-parser = argparse.ArgumentParser("get_scores_approach1")
+parser = argparse.ArgumentParser("get_scores_approach2")
 parser.add_argument("-model_name", help="name of model to score on", type=str)
 args = parser.parse_args()
 
-filename = "Approach1_test_dataset.jsonl"
+filename = "Approach2_test_dataset.jsonl"
 reader = jsonlines.open(filename)
 correct = 0
 total = 0

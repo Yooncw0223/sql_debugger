@@ -10,13 +10,12 @@ class Approach3:
         return "You are helping the user debug their SQL query by returning a JSON, \
 given an English prompt, and a sample SQL query. \
 The given query may already be correct. \
-You may ask the user to run a SQL query for you to learn more about the database. \
-"
+You may ask the user to run a SQL query for you to learn more about the database."
 
     @staticmethod
-    def get_user_content_initial(prompt, predicted):
-        return "How do I express \'" + str(prompt) + "\' in SQLite? \
-I currently have \'" + str(predicted) + "\'. \
+    def get_user_content_initial(prompt: str, predicted: str) -> str:
+        return "How do I express \'" + prompt + "\' in SQLite? \
+I currently have \'" + predicted + "\'. \
 If you'd like, I can also run any SQL query against the database for you. \
 Create a valid JSON: \
 {\

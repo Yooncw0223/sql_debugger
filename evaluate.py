@@ -9,6 +9,7 @@ def evaluate_query(query, database):
         res = cur.fetchall()
     except sqlite3.OperationalError as error:
         res = error
+    res = [set(res_tuple) for res_tuple in res]
     con.close()
     return res
 

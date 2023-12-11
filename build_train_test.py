@@ -11,7 +11,6 @@ from approach3 import Approach3
 if __name__ == "__main__":
     with open('DIN-SQL.csv') as f:
         all_data = list(csv.reader(f))[1:]
-    num_data = len(all_data)
     train_data, test_data = train_test_split(all_data, test_size=0.3, random_state=0)
 
     approaches = [Approach1, Approach2, Approach3]

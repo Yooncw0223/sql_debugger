@@ -30,34 +30,16 @@ Create a valid JSON: \
         res = evaluate_query(sql_query_to_run, database)
         return str(res)
 
-    @staticmethod
-    def wrap_around_db_result(cls, query_result):
-        # should be in {"role": "...", "content": "Here is what we got: {query_result}. Now answer {original question} or ask us to run the query again"} format
-        pass
-
     @classmethod
     def conversation(cls, prompt, predicted, database):
-        # def get_gpt_response(messages) -> dict:
-        #     # dummy function. eventually, link this up to gpt, and delete this.
-        #     client = OpenAI(api_key=os.environ.get("openaiAPI"))
-        #
-        #     response = client.chat.completions.create(
-        #         model="gpt-3.5-turbo-1106",
-        #         response_format={ "type": "json_object" },
-        #         messages = [{"role": "system", "content": cls.get_system_content()}, {"role": "user", "content": prompt}],
-        #     )
-        #     result = response.choices[0].message.content
-        #     return json.loads(result if result else "{}")
-        response = get_gpt_response([
-            {"role": "system", "content": cls.get_system_content()},
-            {"role": "user", "content": cls.get_user_content_initial(prompt, predicted)},
-        ])
+        messages = []
+        messages.append({"role": "system", "content": cls.get_system_content()})
+        messages.append({"role": "user", "content": cls.get_user_content_initial(prompt, predicted)})
+        response = get_gpt_response(messages)
         while response["sql_query_to_run"]:
-            print("conversation running")
-            response = get_gpt_response([
-                {"role": "system", "content": cls.get_system_content()},
-                {"role": "user", "content": cls.get_user_content_runSQL(response["sql_query_to_run"], database)},
-            ])
+            messages.append({"role": "assistant", "content": str(response)})
+            messages.append({"role": "user", "content": cls.get_user_content_runSQL(response["sql_query_to_run"], database)})
+            response = get_gpt_response(messages)
         return response["sql_query"]
 
     @classmethod

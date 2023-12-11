@@ -1,7 +1,6 @@
 import jsonlines
 import argparse
 
-from gpt_interface import get_gpt_response
 from evaluate import check_equivalence
 from approach3 import Approach3
 

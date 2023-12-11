@@ -15,7 +15,7 @@ if __name__ == "__main__":
 
     cur_train = list(jsonlines.open(train_dataset_filename))
 
-    idx = 1
+    idx = 2
     print(f"working on idx {idx}")
     prompt, predicted, gold, database = train_data[idx]
 

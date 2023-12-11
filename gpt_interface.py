@@ -34,6 +34,8 @@ if use_real_client:
 
 elif not use_real_client:
     def get_gpt_response(messages, model_name=None):
+        for message in messages:
+            role, content = message["role"], message["content"]
         return {
             "sql_query_to_run": "",
             "sql_query": "Dummy SQL query response."

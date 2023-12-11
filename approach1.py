@@ -37,9 +37,7 @@ Create a valid JSON that represents the corrected query:\
                 {
                     'role': 'assistant',
                     'content': cls.get_assistant_content(gold)
-                }
-    ],
-    })
+                }]})
         return output_dataset
 
     @classmethod

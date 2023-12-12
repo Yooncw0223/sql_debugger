@@ -1112,9 +1112,8 @@ def evaluate1(gold, predict, db_dir, etype = "exec", kmaps = None, plug_value = 
                         2.0 * scores[level]['partial'][type_]['acc'] * scores[level]['partial'][type_]['rec'] / (
                         scores[level]['partial'][type_]['rec'] + scores[level]['partial'][type_]['acc'])
 
-    print_scores1(scores, etype, include_turn_acc=include_turn_acc)
 
-    return [scores[level]['exec'] for level in levels]
+    return [scores[level]['exec'] for level in levels][-1]
 
 def print_scores1(scores, etype, include_turn_acc=True):
     turns = ['turn 1', 'turn 2', 'turn 3', 'turn 4', 'turn > 4']

@@ -15,7 +15,7 @@ if __name__ == "__main__":
 
     cur_train = list(jsonlines.open(train_dataset_filename))
 
-    idx = 2
+    idx = 10
     print(f"working on idx {idx}")
     prompt, predicted, gold, database = train_data[idx]
 
@@ -26,7 +26,6 @@ if __name__ == "__main__":
         ]})
 
     add_assistant_response = None
-
     change_assistant_response_to = None
 
     cur_messages = cur_train[idx]["messages"]

@@ -6,7 +6,7 @@ from openai import OpenAI
 client = OpenAI(api_key=os.environ.get("openaiAPI"))
 
 client.files.create(
-  file=open("train_dataset.jsonl", "rb"),
+  file=open("Approach2_train_dataset.jsonl", "rb"),
   purpose="fine-tune"
 )
 

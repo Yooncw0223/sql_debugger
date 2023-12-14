@@ -1,0 +1,311 @@
+SELECT DISTINCT c.id FROM channels AS c LEFT JOIN cartoons AS ct ON c.id = ct.channel_id WHERE ct.director != 'Ben Jones' OR ct.director IS NULL;
+SELECT id FROM templates WHERE id NOT IN (SELECT template_id FROM documents);
+SELECT id FROM students WHERE id NOT IN (SELECT DISTINCT student_id FROM friendships UNION SELECT DISTINCT friend_id FROM friendships)
+SELECT id FROM templates WHERE id NOT IN (SELECT template_id FROM documents);
+SELECT SUM(ticket_expense) FROM visitors WHERE membership_level = 1;
+SELECT language FROM Languages WHERE country_id IN (SELECT id FROM Countries WHERE government = 'Republic') GROUP BY language HAVING COUNT(*) = 1
+SELECT employee_name FROM employees WHERE one_time_bonus = (SELECT MAX(one_time_bonus) FROM employees);
+SELECT COUNT(*) FROM documents;
+SELECT COUNT(*) FROM flights WHERE airline = 'United Airlines' AND destination = 'ASY';
+SELECT official_language FROM countries WHERE head_of_state = 'Beatrix';
+SELECT first_name, age FROM students WHERE has_pet = 1;
+SELECT COUNT(*) as total_singers FROM singers;
+SELECT * FROM paragraphs WHERE content LIKE '%Korea%';
+SELECT week, rank FROM WeeklyRankings WHERE episode_name = 'A Love of a Lifetime';
+SELECT arrival_date, departure_date FROM dogs;
+SELECT continent FROM (SELECT continent, COUNT(DISTINCT language) AS num_languages FROM Countries GROUP BY continent ORDER BY num_languages DESC LIMIT 1);
+SELECT name FROM visitors WHERE membership_level > 4 ORDER BY membership_level DESC
+SELECT country_code FROM countries WHERE player_count > 50;
+SELECT COUNT(*) FROM professionals WHERE NOT EXISTS (SELECT * FROM treatments WHERE treatments.professional_id = professionals.id AND treatments.animal_type = 'Dog')
+SELECT name, grade FROM highschoolers;
+SELECT year FROM concerts GROUP BY year ORDER BY COUNT(*) DESC LIMIT 1;
+SELECT COUNT(*) FROM matches
+SELECT COUNT(*) FROM TV_Channel WHERE language = 'English';
+SELECT MAX(age) AS age FROM dogs
+SELECT Name FROM Students WHERE Age >= 14 AND Age <= 18 ORDER BY Likes DESC LIMIT 1;
+SELECT COUNT(*) AS number_of_airlines FROM airlines WHERE country = 'USA';
+SELECT name, capacity FROM stadium WHERE average_attendance = (SELECT MAX(average_attendance) FROM stadium);
+SELECT COUNT(*) FROM professionals WHERE id NOT IN (SELECT DISTINCT professional_id FROM treatments WHERE animal_type = 'Dog')
+SELECT manager_name, district FROM shops ORDER BY number_of_products_sold DESC LIMIT 1
+SELECT COUNT(*) FROM documents WHERE template_type = 'PPT';
+SELECT DISTINCT Address FROM Students;
+SELECT country_name FROM (SELECT country_name, COUNT(*) AS makers_count FROM car_makers GROUP BY country_name ORDER BY makers_count DESC LIMIT 1);
+SELECT COUNT(*) FROM conductors;
+SELECT AVG(age) AS average_age FROM students WHERE student_id NOT IN (SELECT student_id FROM pets)
+SELECT name FROM museums WHERE staff_count > (SELECT MIN(staff_count) FROM museums WHERE open_year > 2010)
+SELECT teachers.name, courses.course_name FROM teachers INNER JOIN courses ON teachers.id = courses.teacher_id ORDER BY teachers.name ASC
+SELECT maker, model FROM Vehicles;
+SELECT model FROM cars WHERE weight < (SELECT AVG(weight) FROM cars);
+SELECT AVG(num_tickets) AS average_tickets, MAX(num_tickets) AS max_tickets FROM visits;
+SELECT first_name, middle_name, last_name FROM graduates ORDER BY graduation_date ASC LIMIT 1
+SELECT airline, COUNT(*) AS flights_count FROM flights GROUP BY airline ORDER BY flights_count DESC LIMIT 1;
+SELECT description FROM departments WHERE name LIKE '%the computer%'
+SELECT name FROM conductor ORDER BY years_of_experience DESC LIMIT 1
+SELECT location, name FROM stadiums WHERE capacity BETWEEN 5000 AND 10000;
+SELECT notes FROM death_events WHERE notes LIKE '%East%'
+SELECT RANK() OVER (ORDER BY Money DESC) AS MoneyRank FROM Players WHERE Height = (SELECT MAX(Height) FROM Players);
+SELECT name FROM airports WHERE code = 'AKO';
+SELECT role, street, city, state FROM professionals WHERE city LIKE '%West%';
+SELECT model FROM cars GROUP BY model ORDER BY COUNT(*) DESC LIMIT 1;
+SELECT id FROM documents WHERE paragraph_text LIKE '%Brazil%' AND paragraph_text LIKE '%Ireland%';
+SELECT paragraph_text FROM documents WHERE name = 'Customer reviews';
+SELECT id, version_number, type_code FROM templates;
+SELECT COUNT(*) FROM singers;
+SELECT DISTINCT c.country FROM Countries AS c JOIN TV_Shows AS tv ON c.id = tv.country_id JOIN Episodes AS e ON tv.id = e.tv_show_id JOIN Writers AS w ON e.writer_id = w.id WHERE w.name = 'Todd Casey'
+SELECT COUNT(DISTINCT department) FROM degrees
+SELECT name FROM conductors ORDER BY years_of_work DESC
+SELECT name FROM nations WHERE founded > 1950;
+SELECT air_date FROM tv_series WHERE episode = 'A Love of a Lifetime';
+SELECT first_name, country_code, birth_date FROM winners ORDER BY rank_points DESC LIMIT 1
+SELECT player_name, MAX(final_position) as best_finish FROM poker_games GROUP BY player_name;
+SELECT name FROM shops ORDER BY number_of_employees DESC LIMIT 1;
+SELECT COUNT(*) FROM pets WHERE weight > 10;
+SELECT name FROM stadiums WHERE id NOT IN (SELECT stadium_id FROM concerts WHERE YEAR(date) = 2014)
+SELECT template_type_code FROM template_types WHERE template_type_description = 'Book';
+SELECT MAX(share) AS max_share, MIN(share) AS min_share FROM performances WHERE type != 'Live final';
+SELECT template_id, version_number, template_type_code FROM templates;
+SELECT city, COUNT(*) as number_of_employees FROM employees GROUP BY city;
+SELECT id, maker FROM car_makers GROUP BY maker HAVING COUNT(model) >= 2 AND COUNT(DISTINCT maker) > 3
+SELECT production_code, channel FROM cartoons ORDER BY air_date DESC LIMIT 1
+SELECT COUNT(DISTINCT type) FROM pets;
+SELECT semester_id FROM enrollment WHERE program = 'Masters' INTERSECT SELECT semester_id FROM enrollment WHERE program = 'Bachelors';
+SELECT owner.last_name FROM owner INNER JOIN dog ON owner.id = dog.owner_id WHERE dog.birth_date = (SELECT MAX(birth_date) FROM dog)
+SELECT COUNT(*) FROM people WHERE district = 'Gelderland';
+SELECT o.* FROM orchestras o LEFT JOIN performances p ON o.orchestra_id = p.orchestra_id WHERE p.performance_id IS NULL
+SELECT first_name, last_name, email FROM owners WHERE state LIKE '%North%'
+SELECT first_name, total_ranking_points FROM players;
+SELECT name FROM contestants WHERE name != 'Jessie Alloway';
+SELECT first_name, middle_name, last_name, id FROM Students JOIN (SELECT student_id FROM Enrollments GROUP BY student_id HAVING COUNT(DISTINCT degree_program_id) = 2) AS DoubleDegreeStudents ON Students.id = DoubleDegreeStudents.student_id;
+SELECT id, name, membership_level FROM visitors ORDER BY total_spent DESC LIMIT 1
+SELECT name, birth_date FROM people ORDER BY name ASC;
+SELECT pet.id FROM pet JOIN student ON pet.student_id = student.id WHERE student.last_name = 'Smith';
+SELECT MAX(death_toll) AS maximum, MIN(death_toll) AS minimum FROM table_name;
+SELECT DISTINCT model FROM cars WHERE year > 1980;
+SELECT dogs.name FROM dogs JOIN owners ON dogs.owner_id = owners.id WHERE owners.treatment_expenses <= 1000
+SELECT DISTINCT students.name FROM students JOIN friendships ON students.id = friendships.student_id JOIN likes ON students.id = likes.likee_id WHERE EXISTS (SELECT 1 FROM friendships WHERE friendships.friend_id = students.id) AND EXISTS (SELECT 1 FROM likes WHERE likes.liker_id != students.id)
+SELECT package_choice, series_name FROM tv_channels WHERE has_high_definition = 'Yes';
+SELECT zip_code FROM addresses WHERE city = 'Port Chelsea';
+SELECT id, last_name, cell_phone FROM professionals WHERE state = 'Indiana' OR treatments_performed > 2
+SELECT id FROM documents WHERE paragraphs BETWEEN 1 AND 2;
+SELECT DISTINCT country_code FROM countries WHERE language != 'English';
+SELECT Language FROM CountryLanguage JOIN Country ON CountryLanguage.CountryCode = Country.Code WHERE Country.GovernmentForm = 'Republic' GROUP BY Language HAVING COUNT(*) = 1;
+SELECT 'Winner' AS Result, AVG(WinnersAge) AS AverageAge FROM (SELECT winner_age AS WinnersAge FROM Matches) UNION ALL SELECT 'Loser' AS Result, AVG(LosersAge) AS AverageAge FROM (SELECT loser_age AS LosersAge FROM Matches)
+SELECT name FROM airports WHERE city = 'Aberdeen';
+SELECT Course.name FROM Course JOIN Enrollment ON Course.id = Enrollment.course_id GROUP BY Course.id HAVING COUNT(Enrollment.student_id) > 0
+SELECT continent FROM Country GROUP BY continent ORDER BY COUNT(DISTINCT language) DESC LIMIT 1
+SELECT name FROM people WHERE is_poker_player = 0;
+SELECT model FROM tablename GROUP BY model ORDER BY COUNT(DISTINCT version) DESC LIMIT 1
+SELECT continent, AVG(life_expectancy) AS average_life_expectancy, SUM(population) AS total_population FROM country GROUP BY continent HAVING AVG(life_expectancy) < 72
+SELECT DISTINCT City FROM Countries WHERE Region='Asia' AND Language='Chinese'
+SELECT template_id, COUNT(*) as usage_count FROM documents GROUP BY template_id
+SELECT id FROM documents GROUP BY id HAVING COUNT(paragraph_id) >= 2;
+SELECT name FROM orchestras WHERE id NOT IN (SELECT orchestra_id FROM performances);
+SELECT COUNT(DISTINCT nationality) FROM your_table_name;
+SELECT name, country, age FROM singers ORDER BY age DESC
+SELECT AVG(life_expectancy) AS mean_life_expectancy FROM country WHERE official_language != 'English'
+SELECT MIN(product_count) AS minimum_products, MAX(product_count) AS maximum_products FROM (SELECT COUNT(*) as product_count FROM products GROUP BY shop_id)
+SELECT DISTINCT battle_name FROM battles WHERE bulgarian_commander = 'Kaloyan' AND latin_commander = 'Baldwin I';
+SELECT name FROM nations ORDER BY population ASC LIMIT 3
+SELECT COUNT(*) FROM transcripts;
+SELECT country_name, COUNT(language) AS number_of_languages FROM country_language GROUP BY country_name HAVING COUNT(language) > 2;
+SELECT air_date FROM episodes WHERE title = 'A Love of a Lifetime';
+SELECT COUNT(*) FROM flights WHERE airline = 'Jetblue Airways';
+SELECT Episode.Name FROM Episode JOIN TV_Series ON Episode.Series_Id = TV_Series.Id JOIN TV_Channel ON TV_Series.Channel_Id = TV_Channel.Id WHERE TV_Channel.Name = 'Sky Radio';
+SELECT hometown FROM teachers GROUP BY hometown HAVING COUNT(*) > 1;
+SELECT COUNT(*) FROM students WHERE grade_level >= 9 AND grade_level <= 12;
+SELECT COUNT(*) AS spanish_speaking_countries FROM country WHERE primary_language = 'Spanish'
+SELECT employee_name FROM evaluations GROUP BY employee_name ORDER BY COUNT(award) DESC LIMIT 1
+SELECT section_name FROM table_name ORDER BY section_name DESC
+SELECT COUNT(*) AS NumberOfDegrees FROM Degrees WHERE Department = 'Engineering'
+SELECT name, independence_year, surface_area FROM country ORDER BY population ASC LIMIT 1;
+SELECT COUNT(*) FROM battles WHERE id NOT IN (SELECT battle_id FROM ships WHERE tonnage = 225)
+SELECT `code` FROM `countries` WHERE `language` = 'Spanish' ORDER BY `percentage` DESC LIMIT 1
+SELECT avg(life_expectancy) FROM Country WHERE Continent = 'Africa' AND GovernmentForm LIKE '%Republic%'
+SELECT teacher_name FROM teachers WHERE teacher_id IN (SELECT teacher_id FROM courses GROUP BY teacher_id HAVING COUNT(*) >= 2);
+SELECT region FROM regions_table WHERE city = 'Kabul';
+SELECT DISTINCT citizenship FROM Singers WHERE birth_year < 1945 INTERSECT SELECT DISTINCT citizenship FROM Singers WHERE birth_year > 1955
+SELECT MIN(rank) AS best_rank_of_losers FROM matches WHERE outcome = 'lose'
+SELECT hometown, COUNT(*) AS count FROM teachers GROUP BY hometown ORDER BY count DESC LIMIT 1
+SELECT language FROM (SELECT language, COUNT(DISTINCT country) AS country_count FROM Languages GROUP BY language ORDER BY country_count DESC LIMIT 1);
+SELECT COUNT(DISTINCT location) FROM stores;
+SELECT name FROM courses ORDER BY number_of_students DESC LIMIT 1
+SELECT name FROM country WHERE continent = 'Europe' AND population = 80000;
+SELECT flight_number FROM flights WHERE departure_airport = 'APG';
+SELECT Highschooler.name, COUNT(Like.ID1) AS likes_count FROM Highschooler JOIN Like ON Highschooler.ID = Like.ID1 GROUP BY Highschooler.name
+SELECT name FROM country WHERE surface_area > (SELECT MAX(surface_area) FROM country WHERE continent = 'Europe')
+SELECT name FROM nations WHERE speaks_english = 1 AND speaks_french = 1;
+SELECT first_name, age FROM students WHERE has_dog = 1 AND has_cat = 0;
+SELECT package_options FROM tv_channels WHERE channel_id NOT IN (SELECT channel_id FROM cartoons WHERE director = 'Ben Jones')
+SELECT MAX(charge_amount) AS MostExpensiveChargeAmount FROM charges;
+SELECT PackageOptions FROM TVChannels WHERE SeriesName = 'Sky Radio';
+SELECT description FROM courses WHERE name = 'Math'
+SELECT Name FROM HighSchooler WHERE Grade > 5 AND ID IN (SELECT ID1 FROM Friend GROUP BY ID1 HAVING COUNT(ID2) >= 2);
+SELECT COUNT(*) FROM friends WHERE name = 'Kyle';
+SELECT COUNT(*) FROM flights;
+SELECT DogName, TreatmentDate FROM Dogs WHERE Breed IN (SELECT Breed FROM Dogs GROUP BY Breed ORDER BY COUNT(*) ASC LIMIT 1)
+SELECT LastName FROM Students WHERE State = 'North Carolina' AND ProgramID IS NULL;
+SELECT DISTINCT first_name FROM students WHERE id IN (SELECT student_id FROM pets WHERE pet_type = 'cat') AND id IN (SELECT student_id FROM pets WHERE pet_type = 'dog');
+SELECT id, type_code FROM templates WHERE id = (SELECT template_id FROM documents GROUP BY template_id ORDER BY COUNT(*) DESC LIMIT 1)
+SELECT DISTINCT citizenship FROM singers WHERE birth_year < 1945 INTERSECT SELECT DISTINCT citizenship FROM singers WHERE birth_year > 1955
+SELECT owner_id, zip_code FROM owners INNER JOIN payments ON owners.id = payments.owner_id GROUP BY owner_id ORDER BY SUM(amount) DESC LIMIT 1
+WITH AvgPop AS (SELECT AVG(population) as avg_population FROM cities) SELECT district, COUNT(*) AS cities_above_avg FROM cities, AvgPop WHERE cities.population > AvgPop.avg_population GROUP BY district
+SELECT name FROM conductors ORDER BY years_of_work DESC LIMIT 1
+SELECT document_id, document_name, document_description FROM documents;
+SELECT COUNT(*) FROM official_languages WHERE country = 'Afghanistan';
+SELECT name FROM singers ORDER BY net_worth ASC;
+SELECT course_enrollment_id, COUNT(transcript_id) AS transcript_count FROM enrollments GROUP BY course_enrollment_id ORDER BY transcript_count DESC LIMIT 1
+SELECT COUNT(*) AS number_of_nations FROM nations WHERE english = 1 AND dutch = 1;
+SELECT first_name, middle_name, last_name FROM students ORDER BY graduation_year ASC LIMIT 1
+SELECT first_name FROM students WHERE country = 'Haiti' OR cell_phone = '09700166582';
+SELECT birth_date FROM poker_players ORDER BY earnings ASC LIMIT 1
+SELECT DISTINCT country FROM singers WHERE age > 20;
+SELECT code FROM country WHERE code NOT IN (SELECT countrycode FROM countrylanguage WHERE language = 'English' AND isofficial = 'T') AND governmentform NOT LIKE '%Republic%'
+SELECT p.id, p.role, p.email FROM professionals p LEFT JOIN treatments t ON p.id = t.professional_id WHERE t.animal_type = 'dog' AND t.professional_id IS NULL;
+SELECT make, production_time FROM cars WHERE year = (SELECT MIN(year) FROM cars)
+SELECT COUNT(*) AS paragraph_count FROM paragraphs WHERE document_name = 'Summer Show';
+SELECT template_type_code, COUNT(*) AS template_count FROM templates GROUP BY template_type_code;
+SELECT MAX(age) AS oldest_age FROM dogs;
+SELECT name FROM museums WHERE id NOT IN (SELECT museum_id FROM visitors)
+SELECT id FROM channels WHERE id NOT IN (SELECT channel_id FROM cartoons WHERE director = 'Ben Jones')
+SELECT type_code FROM template_types WHERE description = 'Book';
+SELECT flight_number FROM flights WHERE arrival_airport = 'APG';
+SELECT series_name, country FROM TV_channels WHERE channel_id IN (SELECT channel_id FROM cartoons WHERE director = 'Ben Jones') AND channel_id IN (SELECT channel_id FROM cartoons WHERE director = 'Michael Chang');
+SELECT winner AS player, AVG(winner_age) AS average_age FROM matches GROUP BY winner UNION SELECT loser AS player, AVG(loser_age) AS average_age FROM matches GROUP BY loser;
+SELECT COUNT(*) FROM pets JOIN students ON pets.owner_id = students.id WHERE pets.species = 'dog' AND students.gender = 'female';
+SELECT name, theme, COUNT(singer_id) AS number_of_singers FROM concerts GROUP BY concert_id;
+SELECT MAX(rank) as highest_loser_rank FROM matches WHERE result = 'lose';
+SELECT country FROM singers WHERE age > 40 INTERSECT SELECT country FROM singers WHERE age < 30;
+SELECT DISTINCT country_code FROM countries WHERE lang != 'English';
+SELECT population, name, leader FROM countries ORDER BY area DESC LIMIT 1
+SELECT name, rank FROM winners ORDER BY age ASC LIMIT 3
+SELECT location, COUNT(*) AS number_of_shops FROM shops GROUP BY location;
+SELECT first_name, SUM(ranking_points) AS total_ranking_points FROM players GROUP BY first_name;
+SELECT DISTINCT Course.name FROM Course JOIN Enrollment ON Course.id = Enrollment.course_id;
+SELECT flight_number FROM Flights WHERE departure_city = 'Aberdeen';
+SELECT DISTINCT h1.ID FROM Highschooler h1 JOIN Friend ON h1.ID = Friend.ID1 JOIN Likes ON h1.ID = Likes.ID2 WHERE EXISTS (SELECT 1 FROM Friend f WHERE h1.ID = f.ID1) AND EXISTS (SELECT 1 FROM Likes l WHERE h1.ID = l.ID2)
+SELECT grade FROM high_schoolers WHERE name = 'Kyle';
+SELECT record_company, COUNT(*) as num_orchestras FROM orchestras GROUP BY record_company ORDER BY num_orchestras DESC LIMIT 1;
+SELECT name, description FROM sections
+SELECT name FROM country WHERE continent = 'Asia' ORDER BY life_expectancy ASC LIMIT 1;
+SELECT student_id, COUNT(likes) AS like_count FROM students GROUP BY student_id;
+SELECT first_name, last_name FROM professionals WHERE id IN (SELECT professional_id FROM treatments WHERE cost < (SELECT AVG(cost) FROM treatments))
+SELECT COUNT(*) FROM countries WHERE continent = 'Asia';
+SELECT production_code, channel FROM cartoons ORDER BY air_date DESC LIMIT 1
+SELECT COUNT(DISTINCT language) FROM country_language WHERE country_code = 'ABW';
+SELECT city_name FROM cities WHERE region = 'Europe' AND official_language <> 'English';
+SELECT record_company FROM orchestras WHERE founding_year < 2003 INTERSECT SELECT record_company FROM orchestras WHERE founding_year > 2003;
+SELECT COUNT(*) FROM airports;
+SELECT name FROM students WHERE grade = 10;
+SELECT semester, name, id FROM (SELECT semester, name, id, RANK() OVER (PARTITION BY semester ORDER BY student_count DESC) AS rank FROM (SELECT semester, name, id, COUNT(*) as student_count FROM courses JOIN registrations ON courses.id = registrations.course_id GROUP BY semester, courses.id)) WHERE rank = 1
+SELECT AVG(attendance) FROM shows;
+SELECT COUNT(*) FROM cars WHERE year = 1980;
+SELECT COUNT(*) FROM Flights WHERE DestinationCity IN ('Aberdeen', 'Abilene');
+SELECT nationality, COUNT(*) AS number_of_people FROM people GROUP BY nationality;
+SELECT DISTINCT airline FROM flights WHERE airline IN (SELECT airline FROM flights WHERE origin = 'CVO') AND airline NOT IN (SELECT airline FROM flights WHERE origin = 'APG')
+SELECT name FROM country WHERE continent = 'Asia' ORDER BY life_expectancy ASC LIMIT 1
+SELECT SUM(country.population) FROM country WHERE NOT EXISTS (SELECT * FROM country_language WHERE country_language.countrycode = country.code AND country_language.language = 'English' AND country_language.isofficial = 'T')
+SELECT name FROM cities WHERE population BETWEEN 160000 AND 900000;
+SELECT MAX(release_date) FROM transcripts;
+SELECT episode FROM tv_series WHERE name = 'Sky Radio';
+SELECT COUNT(*) FROM cars WHERE cylinders > 4;
+SELECT name, surface_area FROM countries ORDER BY surface_area DESC LIMIT 5
+SELECT city, MAX(population) AS population FROM Cities WHERE language = 'English' ORDER BY population DESC LIMIT 1;
+SELECT COUNT(*) AS paragraph_count FROM paragraphs;
+SELECT TeacherName FROM Teachers WHERE Course = 'Math'
+SELECT name FROM poker_players WHERE earnings > 300000;
+SELECT document_id, template_id, description FROM documents WHERE name = 'Robbin CV';
+SELECT id, type_code FROM template WHERE id = (SELECT template_id FROM document GROUP BY template_id ORDER BY COUNT(*) DESC LIMIT 1)
+SELECT conductor_name FROM Conductors WHERE conductor_id IN (SELECT conductor_id FROM Performances GROUP BY conductor_id HAVING COUNT(DISTINCT orchestra_id) > 1);
+SELECT teachers.name, courses.name FROM teachers JOIN courses ON teachers.id = courses.teacher_id;
+SELECT COUNT(*) AS total_count FROM teachers;
+SELECT first_name, birth_date FROM players WHERE country = 'USA';
+SELECT AVG(earnings) AS average_earnings FROM poker_players WHERE height > 200
+SELECT flight_number FROM flights WHERE destination_city = 'Aberdeen';
+SELECT COUNT(*) FROM flights WHERE departure_airport = 'APG';
+SELECT name FROM employees ORDER BY age ASC
+SELECT AVG(age) AS average_age, MIN(age) AS minimum_age, MAX(age) AS maximum_age FROM singers WHERE nationality = 'French'
+SELECT citizenship, MAX(net_worth) FROM people GROUP BY citizenship
+SELECT language FROM country_language WHERE country = 'Aruba' AND is_official = 'TRUE';
+SELECT country FROM countries WHERE official_language = 'English' OR official_language = 'Dutch';
+SELECT flight_number FROM Flights WHERE departure_city = 'Aberdeen';
+SELECT name FROM properties WHERE (type = 'house' OR type = 'apartment') AND rooms > 1;
+SELECT maker, COUNT(model) AS model_count FROM products GROUP BY maker HAVING model_count > 3;
+SELECT abbreviation, country FROM airlines WHERE id = (SELECT airline_id FROM flights GROUP BY airline_id ORDER BY COUNT(*) ASC LIMIT 1)
+SELECT template_type_code FROM templates GROUP BY template_type_code ORDER BY COUNT(*) DESC LIMIT 1
+SELECT name FROM conductors ORDER BY age ASC;
+SELECT id, text FROM paragraphs WHERE title = 'Welcome to NY';
+SELECT name, rank FROM winners ORDER BY age ASC LIMIT 3
+SELECT address_id, line1, line2, line3, line4, city, state, zip, country FROM addresses WHERE address_id = (SELECT address_id FROM students GROUP BY address_id ORDER BY COUNT(*) DESC LIMIT 1)
+SELECT COUNT(DISTINCT degree) FROM degrees_offered;
+SELECT YEAR(match_date) AS year, COUNT(*) AS matches FROM matches GROUP BY YEAR(match_date)
+SELECT COUNT(*) FROM dogs WHERE age < (SELECT AVG(age) FROM dogs)
+SELECT owner_id, first_name, last_name FROM owners WHERE owner_id = (SELECT owner_id FROM dogs GROUP BY owner_id ORDER BY COUNT(*) DESC LIMIT 1)
+SELECT DISTINCT airline FROM flights WHERE departure_airport = 'CVO' AND airline NOT IN (SELECT DISTINCT airline FROM flights WHERE departure_airport = 'APG')
+SELECT charge_type, amount FROM charges;
+SELECT AVG(age) FROM dogs WHERE has_treatment = 1;
+SELECT COUNT(DISTINCT maker) FROM cars WHERE country = 'France';
+SELECT id FROM tv_channels WHERE country IN (SELECT country FROM tv_channels GROUP BY country HAVING COUNT(*) > 2)
+SELECT DISTINCT s.name FROM singers s JOIN concerts c ON s.id = c.singer_id WHERE strftime('%Y', c.date) = '2014'
+SELECT language, COUNT(channel_id) AS number_of_channels FROM tv_channels GROUP BY language;
+SELECT MAX(created_at) AS last_date_created FROM votes WHERE state = 'CA';
+SELECT breed FROM dogs GROUP BY breed ORDER BY COUNT(*) DESC LIMIT 1
+SELECT name FROM singers WHERE citizenship != 'France';
+SELECT cylinders FROM cars WHERE model = 'volvo' ORDER BY accelerate ASC LIMIT 1;
+SELECT DISTINCT year FROM cars WHERE EXISTS (SELECT 1 FROM cars AS subquery WHERE subquery.year = cars.year AND subquery.weight < 4000) AND EXISTS (SELECT 1 FROM cars AS subquery WHERE subquery.year = cars.year AND subquery.weight > 3000);
+SELECT singers.name, singers.country_of_origin FROM singers JOIN songs ON singers.id = songs.singer_id WHERE songs.title LIKE '%Hey%'
+SELECT name FROM teachers ORDER BY age ASC;
+SELECT document_id, COUNT(paragraph_id) AS number_of_paragraphs FROM paragraphs GROUP BY document_id ORDER BY document_id;
+SELECT AVG(life_expectancy) AS avg_life_expectancy FROM country WHERE official_language != 'English'
+SELECT earnings FROM poker_players ORDER BY earnings DESC
+SELECT * FROM students ORDER BY name DESC
+SELECT DISTINCT airlines.name FROM airlines JOIN flights ON airlines.id = flights.airline_id WHERE flights.destination = 'AHD';
+SELECT loser.name AS loser_name, winner.name AS winner_name FROM matches JOIN players AS loser ON matches.loser_id = loser.id JOIN players AS winner ON matches.winner_id = winner.id ORDER BY matches.minutes DESC LIMIT 1;
+SELECT COUNT(*) FROM templates;
+SELECT package_options, series_name FROM TV_Channel WHERE supports_high_definition = 'Yes';
+SELECT code FROM countries WHERE primary_language = 'Spanish'
+SELECT phone_number FROM tablename WHERE first_name = 'Timmothy' AND last_name = 'Ward';
+SELECT id FROM templates WHERE description = 'Presentation';
+SELECT teachers.name FROM teachers LEFT JOIN courses ON teachers.id = courses.teacher_id WHERE courses.teacher_id IS NULL;
+SELECT major, age FROM Students WHERE NOT EXISTS (SELECT 1 FROM Pets WHERE Students.student_id = Pets.owner_id AND Pets.species = 'cat')
+SELECT student_id, COUNT(pet_id) AS number_of_pets FROM Pets GROUP BY student_id;
+SELECT airline_name FROM airlines WHERE abbreviation = 'UAL';
+SELECT name FROM countries ORDER BY population DESC LIMIT 3
+SELECT abbreviation FROM airlines WHERE name = 'JetBlue Airways';
+SELECT name FROM poker_players ORDER BY final_tables ASC;
+SELECT TV_Channel FROM Series WHERE Title = 'The Rise of the Blue Beetle!';
+SELECT DISTINCT country FROM singers WHERE age > 20;
+SELECT DISTINCT s.id FROM students s JOIN friends f ON s.id = f.student_id JOIN likes l ON s.id = l.liked_by_student_id WHERE f.friend_student_id IS NOT NULL AND l.liked_student_id IS NOT NULL;
+SELECT name, date, result FROM battles
+SELECT COUNT(*) FROM winners WHERE handedness = 'L' AND tournament = 'WTA Championships';
+SELECT country_code FROM countries WHERE player_count > 50;
+SELECT name FROM employees ORDER BY age ASC;
+SELECT name, age, weight FROM dogs WHERE abandoned = 1;
+SELECT city FROM Employees WHERE age < 30 GROUP BY city HAVING COUNT(*) > 1;
+SELECT email FROM professionals WHERE state = 'Hawaii' OR state = 'Wisconsin';
+SELECT singers.name FROM singers JOIN performances ON singers.id = performances.singer_id WHERE performances.year = 2014;
+SELECT AVG(age) AS average_age FROM dogs
+SELECT language FROM (SELECT language, COUNT(DISTINCT country) AS num_countries FROM Languages WHERE continent = 'Asia' GROUP BY language ORDER BY num_countries DESC LIMIT 1)
+SELECT district FROM shops WHERE product_count < 3000 INTERSECT SELECT district FROM shops WHERE product_count > 10000;
+SELECT MIN(product_count) AS minimum, MAX(product_count) AS maximum FROM (SELECT store_id, COUNT(product_id) AS product_count FROM products GROUP BY store_id)
+SELECT MAX(accelerate) AS max_accelerate FROM (SELECT cylinders, MAX(acceleration) AS accelerate FROM cars GROUP BY cylinders)
+SELECT DISTINCT s.name FROM singers s JOIN songs sg ON s.id = sg.singer_id WHERE sg.sales > 300000
+SELECT * FROM airlines WHERE abbreviation = 'UAL'
+SELECT COUNT(*) FROM dogs WHERE treatments > 0;
+SELECT description FROM sections WHERE name = 'h';
+SELECT semester_id, semester_name FROM semesters WHERE semester_id = (SELECT semester_id FROM registrations GROUP BY semester_id ORDER BY COUNT(student_id) DESC LIMIT 1)
+SELECT FullName FROM Players WHERE Handedness = 'Left' ORDER BY BirthDate
+SELECT template_type_code, COUNT(*) AS document_count FROM documents GROUP BY template_type_code;
+SELECT city FROM tablename WHERE population BETWEEN 160000 AND 900000;
+SELECT MAX(weight) AS max_weight, type FROM pets GROUP BY type
+SELECT COUNT(DISTINCT country) AS number_of_countries FROM car_makers WHERE car_maker_count > 2;
+SELECT COUNT(*) FROM ships WHERE status = 'Captured';
+SELECT vote_id, phone_number, state FROM votes;
+SELECT Teachers.name, COUNT(Courses.id) AS course_count FROM Teachers LEFT JOIN Courses ON Teachers.id = Courses.teacher_id GROUP BY Teachers.name;
+SELECT date, professional_first_name FROM treatments;
+SELECT owner.first_name, owner.last_name, dog.size FROM owner INNER JOIN dog ON owner.id = dog.owner_id
+SELECT first_name, last_name FROM players WHERE handedness = 'L' ORDER BY birth_date;
+SELECT DISTINCT model FROM vehicles WHERE weight < 3500 AND manufacturer != 'Ford Motor Company';
+SELECT citizenship, COUNT(*) AS number_of_singers FROM singers GROUP BY citizenship ORDER BY number_of_singers DESC LIMIT 1;
+SELECT * FROM paragraphs WHERE text LIKE '%Korea%'
+SELECT age, hometown FROM teachers;
+SELECT first_name, country_code FROM players WHERE player_id IN (SELECT player_id FROM championships WHERE tournament_name = 'WTA Championships' AND player_id IN (SELECT player_id FROM championships WHERE tournament_name = 'Australian Open'))

@@ -1,3 +1,4 @@
+# this python scripts uploads fine-tuning datasets in OpenAI API file system
 
 import os
 
@@ -21,7 +22,4 @@ client.files.create(
 )
 
 print("Just created the data file; proceed with fine-tuning\n")
-
-
-
 

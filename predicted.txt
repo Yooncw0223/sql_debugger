@@ -1,1 +1,1 @@
-SELECT MAX(Capacity), AVG(Capacity) FROM stadium	concert_singer
+SELECT P.property_name FROM Properties AS P JOIN Ref_Property_Types AS RPT ON P.property_type_code = RPT.property_type_code WHERE (RPT.property_type_description = 'house' OR RPT.property_type_description = 'apartment') AND P.room_count > 1	real_estate_properties

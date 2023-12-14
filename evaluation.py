@@ -503,6 +503,7 @@ def print_scores(scores, etype, include_turn_acc=True):
 
 def evaluate(gold, predict, db_dir, etype, kmaps, plug_value, keep_distinct, progress_bar_for_each_datapoint):
 
+    print("evaluate running")
     with open(gold) as f:
         glist = []
         gseq_one = []
@@ -702,7 +703,9 @@ def evaluate(gold, predict, db_dir, etype, kmaps, plug_value, keep_distinct, pro
                         2.0 * scores[level]['partial'][type_]['acc'] * scores[level]['partial'][type_]['rec'] / (
                         scores[level]['partial'][type_]['rec'] + scores[level]['partial'][type_]['acc'])
 
+    print("running0")
     print_scores(scores, etype, include_turn_acc=include_turn_acc)
+    print("runnning1")
 
 
 # Rebuild SQL functions for value evaluation

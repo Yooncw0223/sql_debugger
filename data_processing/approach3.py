@@ -1,5 +1,5 @@
 from evaluate import evaluate_query
-from gpt_interface import get_gpt_response
+from gpt_interface import get_gpt_response, get_gpt_response_no_json
 
 class Approach3:
     # Input is prompt and SQL query and SQL output
@@ -30,16 +30,39 @@ Only give me exactly the information that is asked for. Create a valid JSON: \
         return str(res)
 
     @classmethod
-    def conversation(cls, prompt, predicted, database):
+    def conversation(cls, prompt, predicted, database, model="gpt-3.5-turbo-1106"):
         messages = []
         messages.append({"role": "system", "content": cls.get_system_content()})
         messages.append({"role": "user", "content": cls.get_user_content_initial(prompt, predicted)})
-        response = get_gpt_response(messages)
-        while response["sql_query_to_run"]:
-            messages.append({"role": "assistant", "content": str(response)})
-            messages.append({"role": "user", "content": cls.get_user_content_runSQL(response["sql_query_to_run"], database)})
-            response = get_gpt_response(messages)
-        return response["sql_query"]
+        response = get_gpt_response(messages, model_name=model)
+        entered = False
+        try:
+            while response["sql_query_to_run"]:
+                entered = True
+                messages.append({"role": "assistant", "content": str(response)})
+                messages.append({"role": "user", "content": cls.get_user_content_runSQL(response["sql_query_to_run"], database)})
+                response = get_gpt_response(messages, model_name=model)
+            return response["sql_query"], entered 
+        except:
+            return predicted, entered 
+
+    @classmethod
+    def conversation_ft(cls, prompt, predicted, database, model="gpt-3.5-turbo-1106"):
+        # fine-tuned model can return incorrect string
+        messages = []
+        messages.append({"role": "system", "content": cls.get_system_content()})
+        messages.append({"role": "user", "content": cls.get_user_content_initial(prompt, predicted)})
+        response = get_gpt_response_no_json(messages, model_name=model)
+        entered = False
+        try:
+            while response["sql_query_to_run"]:
+                entered = True
+                messages.append({"role": "assistant", "content": str(response)})
+                messages.append({"role": "user", "content": cls.get_user_content_runSQL(response["sql_query_to_run"], database)})
+                response = get_gpt_response_no_json(messages)
+            return response["sql_query"], entered 
+        except:
+            return predicted, entered 
 
     @classmethod
     def build_train_dataset(cls, train_data):

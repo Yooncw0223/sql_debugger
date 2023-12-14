@@ -1,3 +1,4 @@
+# this python scripts starts fine-tuning job on OpenAI API
 
 import os
 
